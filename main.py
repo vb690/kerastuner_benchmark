@@ -6,33 +6,33 @@ import seaborn as sns
 DATA = {
     'mn_v': {
         'type': 'clas',
-        'data': load_data('mn_v'),
+        'data': load_data('mn_v', portion=0.999),
         'min_delta': 0.0001,
         'n_classes': 10
     },
     'mn_b': {
         'type': 'clas',
-        'data': load_data('mn_b'),
+        'data': load_data('mn_b', portion=0.999),
         'min_delta': 0.0001,
         'n_classes': 10
     },
     'mn_r': {
         'type': 'clas',
-        'data': load_data('mn_r'),
+        'data': load_data('mn_r', portion=0.999),
         'min_delta': 0.0001,
         'n_classes': 10
     },
     'mn_rb': {
         'type': 'clas',
-        'data': load_data('mn_rb'),
+        'data': load_data('mn_rb', portion=0.999),
         'min_delta': 0.0001,
         'n_classes': 10
     }
 
 }
 
-BUDGET = 10
-CV = 1
+BUDGET = 50
+CV = 100
 
 df = comparison_pipeline(
     data_sources=DATA,
@@ -40,6 +40,7 @@ df = comparison_pipeline(
     cv=CV
 )
 
+sns.set(style='whitegrid', font_scale=1.5)
 fig, axs = plt.subplots(3, 2, figsize=(10, 15))
 sns.boxplot(
     x='tuner',
@@ -80,5 +81,6 @@ sns.barplot(
     data=df,
     ax=axs[2][1]
 )
-plt.savefig('results\\boxplot_results.jpg')
+plt.tight_layout()
+plt.savefig('results\\boxplot_results.png')
 plt.show()

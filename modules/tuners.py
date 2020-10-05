@@ -7,30 +7,39 @@ from tensorflow.keras.callbacks import TerminateOnNaN as tnan
 from .hypermodels import MultiLayerPerceptron as MLP
 
 
-def generate_tuners(data_name, hypermodel, budget, cv):
+def generate_tuners(data_name, hypermodel, X, y, budget):
     rst = RandomSearch(
-        hypermodel,
+        hypermodel(
+            X_shape=X.shape,
+            y_shape=y.shape
+        ),
         objective='val_accuracy',
         max_trials=budget,
-        executions_per_trial=cv,
+        executions_per_trial=1,
         directory='o',
         project_name='rs_{}'.format(data_name)
     )
 
     gpt = BayesianOptimization(
-        hypermodel,
+        hypermodel(
+            X_shape=X.shape,
+            y_shape=y.shape
+        ),
         objective='val_accuracy',
         max_trials=budget,
-        executions_per_trial=cv,
+        executions_per_trial=1,
         directory='o',
         project_name='gp_{}'.format(data_name)
     )
 
     hbt = Hyperband(
-        hypermodel,
+        hypermodel(
+            X_shape=X.shape,
+            y_shape=y.shape
+        ),
         objective='val_accuracy',
         max_epochs=budget,
-        executions_per_trial=cv,
+        executions_per_trial=1,
         directory='o',
         project_name='hb_{}'.format(data_name)
     )
@@ -55,18 +64,16 @@ def generate_tuners(data_name, hypermodel, budget, cv):
     return tuners
 
 
-def tuning(X_tr, y_tr, data_name, budget, cv, min_delta=0.001):
+def tuning(X_tr, y_tr, data_name, budget, min_delta=0.001):
     '''
     Tuning a model with varius tuners
     '''
     tuners = generate_tuners(
-        hypermodel=MLP(
-            X_shape=X_tr.shape,
-            y_shape=y_tr.shape
-        ),
+        hypermodel=MLP,
+        X=X_tr,
+        y=y_tr,
         data_name=data_name,
-        budget=budget,
-        cv=cv
+        budget=budget
     )
 
     for tuner_name, tuner_dict in tuners.items():
@@ -94,6 +101,8 @@ def tuning(X_tr, y_tr, data_name, budget, cv, min_delta=0.001):
         end = time.time()
         print(end - begin)
         tuner_dict['time'] = end - begin
-        tuner_dict['best'] = tuner.get_best_models()[0]
+        best_model = tuner.get_best_models()[0]
+        best_model.save(f'results\\best_models\\{tuner_name}_{data_name}')
+        tuner_dict['best'] = best_model
 
     return tuners

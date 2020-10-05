@@ -47,7 +47,7 @@ def create_dense_block(input_tensor, tag, batch_norm, hp):
             dense = BatchNormalization()(dense)
         chosen_activation = hp.Choice(
             'activation_layer_{}_{}'.format(layer, tag),
-            ['lelu', 'prelu', 'relu', 'elu']
+            ['lelu', 'relu', 'elu']
         )
         dense = Activation(
             ACTIVATIONS[chosen_activation]()
