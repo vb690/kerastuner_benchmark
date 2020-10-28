@@ -30,5 +30,5 @@ We will compare the three algorithms on 3 main metrics:
 ## Results 
 
 <p align="center">   
-  <img width="500" height="500" src="https://github.com/vb690/kerastuner_benchmark/blob/master/results/boxplot_results.png">
+  <img width="900" height="500" src="https://github.com/vb690/kerastuner_benchmark/blob/master/results/figures/tuners_perfromance.png">
 </p> 
