@@ -25,6 +25,26 @@ We will compare the three algorithms on 3 main metrics:
 
 ## Data 
 
+**Vanilla MNIST**
+<p align="center">   
+  <img width="500" height="250" src="https://github.com/vb690/kerastuner_benchmark/blob/master/data/figures/mn_v.png">
+</p>  
+  
+**Back MNIST**
+<p align="center">   
+  <img width="395" height="100" src="https://github.com/vb690/kerastuner_benchmark/blob/master/data/figures/mn_b.png">
+</p>  
+  
+**Rotated MNIST**
+<p align="center">   
+  <img width="395" height="100" src="https://github.com/vb690/kerastuner_benchmark/blob/master/data/figures/mn_r.png">
+</p>   
+  
+**RotBack MNIST**
+<p align="center">   
+  <img width="395" height="100" src="https://github.com/vb690/kerastuner_benchmark/blob/master/data/figures/mn_rb.png">
+</p> 
+
 ## Methodology
 
 ## Results 
