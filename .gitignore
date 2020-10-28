@@ -130,7 +130,6 @@ dmypy.json
 
 # files
 *.npy
-*.csv
 !results.csv
 !.gitkeep.txt
 

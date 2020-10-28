@@ -70,7 +70,7 @@ class GLMMPerformance:
             hyper_sigma = pm.Uniform(
                 name='hyper_sigma',
                 lower=0.01,
-                upper=0.2
+                upper=0.1
             )
 
             name = 'Context'
@@ -87,7 +87,7 @@ class GLMMPerformance:
             tuner_slope = pm.TruncatedNormal(
                 name='Tuner',
                 mu=0.0,
-                sd=0.2,
+                sd=0.1,
                 dims='Tuners'
             )
 
@@ -100,7 +100,7 @@ class GLMMPerformance:
             sigma = pm.Uniform(
                 name='sigma',
                 lower=0.01,
-                upper=0.2
+                upper=0.1
             )
 
             out = pm.TruncatedNormal(
@@ -159,4 +159,5 @@ class GLMMPerformance:
                 )
 
             print(summary)
+            plt.tight_layout()
             plt.show()
