@@ -49,6 +49,98 @@ We will compare the three algorithms on 3 main metrics:
 
 ## Results 
 
+### Visual Comparison  
+  
 <p align="center">   
   <img width="900" height="500" src="https://github.com/vb690/kerastuner_benchmark/blob/master/results/figures/tuners_perfromance.png">
 </p> 
+  
+### Bayesian Generalized Mixed Model - Varying Intercept 
+  
+<table class="tg">
+<thead>
+  <tr>
+    <th class="tg-7btt">Metric</th>
+    <th class="tg-7btt" colspan="4">Random Search</th>
+    <th class="tg-7btt" colspan="4">Gaussian Process</th>
+    <th class="tg-7btt" colspan="4">HyperBand</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="tg-0pky"></td>
+    <td class="tg-fymr">Mean</td>
+    <td class="tg-fymr">Std</td>
+    <td class="tg-fymr">3% hdi</td>
+    <td class="tg-fymr">97% hdi</td>
+    <td class="tg-fymr">Mean</td>
+    <td class="tg-fymr">Std</td>
+    <td class="tg-fymr">3% hdi</td>
+    <td class="tg-fymr">97% hdi</td>
+    <td class="tg-fymr">Mean</td>
+    <td class="tg-fymr">Std</td>
+    <td class="tg-fymr">3% hdi</td>
+    <td class="tg-fymr">97% hdi</td>
+  </tr>
+  <tr>
+    <td class="tg-7btt">Accuracy</td>
+    <td class="tg-c3ow"><span style="color:#FE0000">0.150</span></td>
+    <td class="tg-c3ow">0.069</td>
+    <td class="tg-c3ow">0.021</td>
+    <td class="tg-c3ow">0.283</td>
+    <td class="tg-c3ow">0.147</td>
+    <td class="tg-c3ow">0.069</td>
+    <td class="tg-c3ow">0.016</td>
+    <td class="tg-c3ow">0.280</td>
+    <td class="tg-c3ow">0.149</td>
+    <td class="tg-c3ow">0.069</td>
+    <td class="tg-c3ow">0.020</td>
+    <td class="tg-c3ow">0.283</td>
+  </tr>
+  <tr>
+    <td class="tg-7btt">F1 Score</td>
+    <td class="tg-0pky">0.145</td>
+    <td class="tg-0pky">0.069</td>
+    <td class="tg-0pky">0.012</td>
+    <td class="tg-0pky">0.272</td>
+    <td class="tg-0pky">0.139</td>
+    <td class="tg-0pky">0.069</td>
+    <td class="tg-0pky">0.002</td>
+    <td class="tg-0pky">0.263</td>
+    <td class="tg-0pky">0.143</td>
+    <td class="tg-0pky">0.069</td>
+    <td class="tg-0pky">0.011</td>
+    <td class="tg-0pky">0.271</td>
+  </tr>
+  <tr>
+    <td class="tg-7btt">Precision</td>
+    <td class="tg-0pky">0.151</td>
+    <td class="tg-0pky">0.07</td>
+    <td class="tg-0pky">0.016</td>
+    <td class="tg-0pky">0.277</td>
+    <td class="tg-0pky">0.144</td>
+    <td class="tg-0pky">0.07</td>
+    <td class="tg-0pky">0.012</td>
+    <td class="tg-0pky">0.273</td>
+    <td class="tg-0pky">0.152</td>
+    <td class="tg-0pky">0.07</td>
+    <td class="tg-0pky">0.016</td>
+    <td class="tg-0pky">0.277</td>
+  </tr>
+  <tr>
+    <td class="tg-7btt">Recall</td>
+    <td class="tg-0pky">147</td>
+    <td class="tg-0pky">0.07</td>
+    <td class="tg-0pky">0.016</td>
+    <td class="tg-0pky">0.281</td>
+    <td class="tg-0pky">143</td>
+    <td class="tg-0pky">0.07</td>
+    <td class="tg-0pky">0.012</td>
+    <td class="tg-0pky">0.278</td>
+    <td class="tg-0pky">145</td>
+    <td class="tg-0pky">0.07</td>
+    <td class="tg-0pky">0.012</td>
+    <td class="tg-0pky">0.277</td>
+  </tr>
+</tbody>
+</table>
