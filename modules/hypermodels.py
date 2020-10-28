@@ -1,5 +1,5 @@
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Input, Dense, LeakyReLU, PReLU, ReLU, ELU
+from tensorflow.keras.layers import Input, Dense
 from tensorflow.keras.layers import Activation, Dropout, BatchNormalization
 from tensorflow.keras.optimizers import Adam
 
@@ -12,10 +12,10 @@ def create_dense_block(input_tensor, tag, batch_norm, hp):
     layers
     '''
     ACTIVATIONS = {
-        'relu': ReLU,
-        'elu': ELU,
-        'lelu': LeakyReLU,
-        'prelu': PReLU
+        'relu': 'relu',
+        'elu': 'elu',
+        'sigmoid': 'sigmoid',
+        'tanh': 'tanh'
     }
     for layer in range(hp.Int(
                         'layers_{}'.format(tag),
@@ -47,10 +47,10 @@ def create_dense_block(input_tensor, tag, batch_norm, hp):
             dense = BatchNormalization()(dense)
         chosen_activation = hp.Choice(
             'activation_layer_{}_{}'.format(layer, tag),
-            ['lelu', 'relu', 'elu']
+            ['relu', 'elu', 'sigmoid', 'tanh']
         )
         dense = Activation(
-            ACTIVATIONS[chosen_activation]()
+            ACTIVATIONS[chosen_activation]
         )(dense)
         dense = Dropout(
             rate=hp.Float(
@@ -96,14 +96,7 @@ class MultiLayerPerceptron(HyperModel):
 
         model = Model(input_tensor, out)
         model.compile(
-            optimizer=Adam(
-                hp.Float(
-                    'learning_rate',
-                    min_value=1e-5,
-                    max_value=1,
-                    sampling='log'
-                )
-            ),
+            optimizer=Adam(),
             loss=loss,
             metrics=[metric]
 

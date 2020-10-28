@@ -1,11 +1,14 @@
-import os
+from tqdm import tqdm
 
 import numpy as np
 
 import pandas as pd
 
 from sklearn.preprocessing import MinMaxScaler as mms
-from sklearn.metrics import f1_score
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import precision_recall_fscore_support
+
+from sklearn.model_selection import StratifiedKFold as skf
 from sklearn.model_selection import StratifiedShuffleSplit as sss
 
 from tensorflow.keras.callbacks import EarlyStopping as es
@@ -16,6 +19,8 @@ from .tuners import tuning
 
 
 def load_data(name, portion=1.0):
+    """
+    """
     X = np.load('data\\{}\\X.npy'.format(name))
     y = np.load('data\\{}\\y.npy'.format(name))
     if portion < 1.0:
@@ -29,6 +34,8 @@ def load_data(name, portion=1.0):
 
 
 def train_test_split(data, train_size):
+    """
+    """
     X, y = data
     y = to_categorical(y)
     for tr_i, ts_i in sss(n_splits=1, train_size=train_size).split(X, y):
@@ -41,9 +48,11 @@ def train_test_split(data, train_size):
 
 
 def comparison_pipeline(data_sources, budget, cv=30, tuning_portion=0.1):
+    """
+    """
     index = 0
     df = pd.DataFrame(
-        columns=['tuner', 'source', 'score', 'n_conf', 'time']
+        columns=['tuner', 'source', 'acc', 'f1', 'precision', 'recall']
     )
     for data_name, source in data_sources.items():
 
@@ -55,7 +64,7 @@ def comparison_pipeline(data_sources, budget, cv=30, tuning_portion=0.1):
             train_size=tuning_portion
         )
 
-        tuners = tuning(
+        tuner_names = tuning(
             X_tr=X_tr,
             y_tr=y_tr,
             data_name=data_name,
@@ -63,17 +72,18 @@ def comparison_pipeline(data_sources, budget, cv=30, tuning_portion=0.1):
             budget=budget
         )
 
-        for tuner_name, tuner_dict in tuners.items():
+        for tuner_name in tuner_names:
 
-            time = tuner_dict['time']
-            path = 'o\\{}_{}'.format(tuner_name, data_name)
-            print(path)
-            n_conf = len(os.listdir(path)) - 2
-            splitter = sss(n_splits=cv)
-            print('Start testing for {} with {}'.format(data_name, tuner_name))
-            for tr_i, ts_i in splitter.split(X_ts, y_ts):
+            splitter = skf(n_splits=cv)
+            for tr_i, ts_i in tqdm(splitter.split(X_ts, y_ts.argmax(axis=1))):
+
                 model = load_model(
                     f'results\\best_models\\{tuner_name}_{data_name}'
+                )
+                model.compile(
+                    optimizer='adam',
+                    loss='categorical_crossentropy',
+                    metrics=['accuracy']
                 )
 
                 X_ts_tr, y_ts_tr = X_ts[tr_i], y_ts[tr_i]
@@ -98,22 +108,29 @@ def comparison_pipeline(data_sources, budget, cv=30, tuning_portion=0.1):
                 )
 
                 predictions = model.predict(X_ts_ts).argmax(axis=1)
-                score = f1_score(
+
+                acc = accuracy_score(
                     y_ts_ts.argmax(axis=1),
                     predictions,
-                    average='macro'
                 )
+                precision, recall, f1,\
+                    support = precision_recall_fscore_support(
+                        y_ts_ts.argmax(axis=1),
+                        predictions,
+                        average='weighted'
+                    )
 
                 df.loc[index] = [
                     tuner_name,
                     data_name,
-                    score,
-                    n_conf,
-                    time
+                    acc,
+                    f1,
+                    precision,
+                    recall
                 ]
                 index += 1
 
             print('End testing for {} with {}'.format(data_name, tuner_name))
 
-    df.to_csv('results\\results.csv', index=False)
+    df.to_csv('results\\tables\\models_results.csv', index=False)
     return df

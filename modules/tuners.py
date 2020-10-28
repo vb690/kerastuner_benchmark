@@ -1,4 +1,8 @@
+import os
+
 import time
+
+import pandas as pd
 
 from kerastuner.tuners import RandomSearch, BayesianOptimization, Hyperband
 from tensorflow.keras.callbacks import EarlyStopping as es
@@ -8,12 +12,14 @@ from .hypermodels import MultiLayerPerceptron as MLP
 
 
 def generate_tuners(data_name, hypermodel, X, y, budget):
+    """
+    """
     rst = RandomSearch(
         hypermodel(
             X_shape=X.shape,
             y_shape=y.shape
         ),
-        objective='val_accuracy',
+        objective='val_loss',
         max_trials=budget,
         executions_per_trial=1,
         directory='o',
@@ -25,7 +31,7 @@ def generate_tuners(data_name, hypermodel, X, y, budget):
             X_shape=X.shape,
             y_shape=y.shape
         ),
-        objective='val_accuracy',
+        objective='val_loss',
         max_trials=budget,
         executions_per_trial=1,
         directory='o',
@@ -37,7 +43,7 @@ def generate_tuners(data_name, hypermodel, X, y, budget):
             X_shape=X.shape,
             y_shape=y.shape
         ),
-        objective='val_accuracy',
+        objective='val_loss',
         max_epochs=budget,
         executions_per_trial=1,
         directory='o',
@@ -65,9 +71,9 @@ def generate_tuners(data_name, hypermodel, X, y, budget):
 
 
 def tuning(X_tr, y_tr, data_name, budget, min_delta=0.001):
-    '''
+    """
     Tuning a model with varius tuners
-    '''
+    """
     tuners = generate_tuners(
         hypermodel=MLP,
         X=X_tr,
@@ -75,7 +81,8 @@ def tuning(X_tr, y_tr, data_name, budget, min_delta=0.001):
         data_name=data_name,
         budget=budget
     )
-
+    tuners_df = pd.DataFrame(columns=['tuner', 'source', 'n_conf', 'time'])
+    index = 0
     for tuner_name, tuner_dict in tuners.items():
 
         print('Start tuning for {} with {}'.format(data_name, tuner_name))
@@ -99,10 +106,24 @@ def tuning(X_tr, y_tr, data_name, budget, min_delta=0.001):
         )
         print('End tuning for {} with {}'.format(data_name, tuner_name))
         end = time.time()
-        print(end - begin)
-        tuner_dict['time'] = end - begin
+        elapsed_time = end - begin
+        print(elapsed_time)
+
         best_model = tuner.get_best_models()[0]
         best_model.save(f'results\\best_models\\{tuner_name}_{data_name}')
-        tuner_dict['best'] = best_model
 
-    return tuners
+        path = 'o\\{}_{}'.format(tuner_name, data_name)
+        n_conf = len(os.listdir(path)) - 2
+
+        tuners_df.loc[index] = [
+            tuner_name,
+            data_name,
+            n_conf,
+            elapsed_time
+        ]
+        index += 1
+
+    tuners_df.to_csv(
+        f'results\\tables\\tuners_results_{data_name}.csv', index=False
+    )
+    return list(tuners.keys())
