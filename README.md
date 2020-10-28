@@ -7,7 +7,7 @@ Given a learning algorithm and a problem to solve (in the simplest case these ar
 
 Given the magnitude of all the possible combinations of hyperparameters and their associated values (i.e. the size of the hyperparameters space) the process of finding the best set is often left to optimization algorithms which aims to find promising candidates in an efficient manner. 
 
-Then, understanding which algorithm is able to achieve the best performance in the shortest ammount of time (or employing the least ammount of computational resources) becomes of pivotal impartance.
+Therefore, understanding which algorithm is able to achieve the best performance in the shortest ammount of time (or employing the least ammount of computational resources) becomes of pivotal impartance.
 
 Here we aim to compare a set of [three optimization algorithms](https://keras-team.github.io/keras-tuner/documentation/tuners/) provided by the library Keras Tuner, namely:
 
