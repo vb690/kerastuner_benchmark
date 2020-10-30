@@ -49,6 +49,9 @@ class GLMMPerformance:
             'Outcomes': np.arange(outcomes.size)
         }
         with pm.Model(coords=coords) as model:
+
+            ###################################################################
+
             contexts_idx = pm.Data(
                 'contexts_idx',
                 contexts,
@@ -60,9 +63,11 @@ class GLMMPerformance:
                 dims='Outcomes'
             )
 
+            ###################################################################
+
             hyper_mu = pm.TruncatedNormal(
                 name='hyper_normal',
-                mu=0.5,
+                mu=0.00,
                 sd=0.01,
                 lower=0,
                 upper=1,
@@ -70,37 +75,50 @@ class GLMMPerformance:
             hyper_sigma = pm.Uniform(
                 name='hyper_sigma',
                 lower=0.01,
-                upper=0.1
+                upper=0.05
             )
 
-            name = 'Context'
-            intercept_dims = 'Contexts'
             varying_intercept = pm.TruncatedNormal(
-                name=name,
+                name='Context',
                 mu=hyper_mu,
                 sd=hyper_sigma,
                 lower=0,
                 upper=1,
-                dims=intercept_dims
+                dims='Contexts'
             )
 
-            tuner_slope = pm.TruncatedNormal(
-                name='Tuner',
+            fixed_intercept = pm.TruncatedNormal(
+                name='Fixed Intercept',
                 mu=0.0,
                 sd=0.1,
+                lower=0,
+                upper=1
+            )
+
+            ###################################################################
+
+            tuner_slope = pm.Normal(
+                name='Tuner',
+                mu=0.0,
+                sd=0.05,
                 dims='Tuners'
             )
 
-            intercept = varying_intercept[contexts_idx]
+            ###################################################################
+
+            intercept = pm.Deterministic(
+                'Intercept',
+                fixed_intercept + varying_intercept[contexts_idx]
+            )
             mu = pm.Deterministic(
                 'mu',
-                intercept
+                pm.math.clip(intercept, 0, 1)
                 + tuner_slope[tuners_idx],
             )
             sigma = pm.Uniform(
                 name='sigma',
                 lower=0.01,
-                upper=0.1
+                upper=0.05
             )
 
             out = pm.TruncatedNormal(
@@ -142,10 +160,9 @@ class GLMMPerformance:
                     figsize=figsize
                 )
 
-                var_names = ['Context']
                 ax_2 = pm.plot_forest(
                     traces,
-                    var_names=var_names,
+                    var_names=['Fixed Intercept', 'Context'],
                     combined=True,
                     ridgeplot_quantiles=[0.05, .25, .5, .75, 0.95],
                     figsize=figsize
@@ -161,3 +178,5 @@ class GLMMPerformance:
             print(summary)
             plt.tight_layout()
             plt.show()
+
+        return traces
