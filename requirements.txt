@@ -3,6 +3,6 @@ numpy
 pandas
 pymc3
 tensorflow
-kerastuner
-matplolib
+keras-tuner
+matplotlib
 notebook
