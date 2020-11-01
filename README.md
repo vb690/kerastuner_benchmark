@@ -144,3 +144,24 @@ We will compare the three algorithms on 3 main metrics:
   </tr>
 </tbody>
 </table>
+
+## Installation
+
+# Requirements 
+1. Download your local version of the repository
+2. Install [Anaconda](https://docs.anaconda.com/anaconda/install/)
+3. Open the Anaconda Powershell Prompt in the repository directory:
+```sh
+# create anaconda environment
+conda create -n tuner_bench_env tensorflow-gpu
+
+# activate the environment
+conda activate tuner_bench_env
+```
+
+4. At this point install all the requirements with:
+
+```sh
+# install the requirements
+conda install -c conda-forge --file requirements.txt
+```
