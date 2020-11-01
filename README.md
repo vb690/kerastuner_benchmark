@@ -147,7 +147,6 @@ We will compare the three algorithms on 3 main metrics:
 
 ## Installation
 
-# Requirements 
 1. Download your local version of the repository
 2. Install [Anaconda](https://docs.anaconda.com/anaconda/install/)
 3. Open the Anaconda Powershell Prompt in the repository directory:
