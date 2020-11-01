@@ -1,0 +1,8 @@
+tqdm
+numpy
+pandas
+pymc3
+tensorflow
+kerastuner
+matplolib
+notebook
