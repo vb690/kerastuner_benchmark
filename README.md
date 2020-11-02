@@ -129,15 +129,15 @@ We will compare the three algorithms on 3 main metrics:
   </tr>
   <tr>
     <td class="tg-7btt">Recall</td>
-    <td class="tg-0pky">147</td>
+    <td class="tg-0pky">0.147</td>
     <td class="tg-0pky">0.07</td>
     <td class="tg-0pky">0.016</td>
     <td class="tg-0pky">0.281</td>
-    <td class="tg-0pky">143</td>
+    <td class="tg-0pky">0.143</td>
     <td class="tg-0pky">0.07</td>
     <td class="tg-0pky">0.012</td>
     <td class="tg-0pky">0.278</td>
-    <td class="tg-0pky">145</td>
+    <td class="tg-0pky">0.145</td>
     <td class="tg-0pky">0.07</td>
     <td class="tg-0pky">0.012</td>
     <td class="tg-0pky">0.277</td>
